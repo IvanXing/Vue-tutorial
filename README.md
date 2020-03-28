@@ -10,6 +10,7 @@
   - `v-html="name"` => 可以解析 HTML
   - `v-if`每次隐藏显示相当于删除 DOM，增加 DOM，性能比 v-show 差
   - `v-show`在页面上存在，被设置为 display:none
+  - `v-for`v-for="(item ,inde) of list"
 
 - 2.MVVM 模式
 
@@ -21,9 +22,14 @@
 
     - View（DOM）+ ViewModel（DOM Listener + Data Bindings = Vue）+ Modle（Plain JS Objects）
 
-  - 3.组件间传值
-    - 父组件向子组件传值：v-bind:xxx = data => props:['xxx']
-    - 子组件向父组件传值：通过\$emit 向上一层触发事件 => 父组件监听
+- 3.组件间传值
+
+  - 父组件向子组件传值：v-bind:xxx = data => props:['xxx']
+  - 子组件向父组件传值：通过\$emit 向上一层触发事件 => 父组件监听
+
+- 4.模板占位符
+  - <template v-for="..."><div>{{xxx}}</div><span>{{xxx}}</span></template>
+  - 可以用来包裹元素，渲染时，并不会占位
 
 ## Vue 基础
 
@@ -95,3 +101,29 @@
   <div v-if="show">用户名：<input key="username"/></div>
   <div v-else>邮箱名：<input key="email"/></div>
   ```
+
+- 6.列表循环
+
+  - 数组循环
+
+    ```js
+    <div v-for="(item ,index) of list" :key="item.id">{{item.text}}</div>
+    ```
+
+    - 直接操作数组下标不生效，操作方法：push pop shift unshift splice sort reverse
+    - 改变数组引用地址，也可以修改数据触发页面更改
+    - set 方法：
+      - 全局方法：`Vue.set(vm.Array, 1, "beijing")`
+      - 实例方法：`vm.$set(vm.Array, 2, "beijing")`
+
+  - 对象循环
+
+    ```js
+    // item 值 key键名 index
+    <div v-for="(item ,key, index) of list" :key="item.id">{{item.text}}</div>
+    ```
+
+    - 更改对象引用地址，页面跟着修改
+    - set 方法：
+      - 全局方法：`Vue.set(vm.Object, "address", "beijing")`
+      - 实例方法：`vm.$set(vm.Object, "address", "beijing")`
