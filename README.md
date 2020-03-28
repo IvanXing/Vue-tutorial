@@ -2,7 +2,7 @@
 
 - 1.基本指令
 
-  - `v-model`绑定值
+  - `v-model` input textarea checkbox radio 绑定值
   - `v-for`循环 item
   - `v-on`绑定事件, `v-on:click` 简写为 `@click`
   - `v-bind:content` 简写为 `:content`
@@ -127,3 +127,68 @@
     - set 方法：
       - 全局方法：`Vue.set(vm.Object, "address", "beijing")`
       - 实例方法：`vm.$set(vm.Object, "address", "beijing")`
+
+- 7.事件绑定
+
+  - 传递 e 以及参数，不写默认传 e
+
+  ```js
+  <button @click="handleClick($event, 1, 2)"></button>
+  handleClick(e, para1, para2){}
+  ```
+
+  - 阻止默认事件
+
+  ```js
+  <form action="/abc" @click="handleClick">
+    <button @click="handleClick"></button>
+  </form>
+  handleClick(e){ e.preventDefault() }
+  ```
+
+  - 普通修饰符
+
+    - .prevent 修饰符阻止默认行为
+    - .stop 阻止向外冒泡
+
+    ```js
+    <form action="/abc" @click.prevent="handleClick">
+      <button @click="handleClick"></button>
+    </form>
+    ```
+
+    - .self 修饰符
+
+    ```js
+    // 点击hello world 就会触发handleClick
+    <div @click="handleClick">
+      <div>hello world</div>
+    </div>
+    ```
+
+    ```js
+    // 点击hello world 不会触发，点击nice才会触发
+    <div @click.self="handleClick">
+      nice
+      <div>hello world</div>
+    </div>
+    ```
+
+    - .once 只执行一次
+    - .capture 事件捕获（从外部到内部）
+
+    ```js
+    // 事件冒泡，从内向往，捕获从外向内
+    <div @click.capture="handleClick">
+      <div @click.capture="handleClick2">hello world</div>
+    </div>
+    handleClick:function(){console.log(1)}
+    handleClick2:function(){console.log(1)}
+    ```
+
+  - 按键修饰符
+    - `@keydowm.enter` => enter 触发 keydown （.tab .delete）
+  - 系统修饰符
+    - `@click.ctrl` => 同时按住 ctrl 才会触发
+  - 鼠标修饰符
+    - `@click.right` => 鼠标右键点击
