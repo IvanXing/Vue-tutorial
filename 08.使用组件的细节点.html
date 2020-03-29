@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>使用组件的细节点</title>
+    <script src="./vue.js"></script>
+  </head>
+  <body>
+    <div id="root">
+      <!-- is 以及 组件data定义 -->
+      <table>
+        <tbody>
+          <tr is="row"></tr>
+          <tr is="row"></tr>
+          <tr is="row"></tr>
+        </tbody>
+      </table>
+      <!-- ref的使用 -->
+      <div ref="hello" @click="handleClick">hello world</div>
+      <counter ref="one" @change="handleChange"></counter>
+      <counter ref="two" @change="handleChange"></counter>
+      <div>{{total}}</div>
+    </div>
+    <script>
+      Vue.component("row", {
+        data: function() {
+          return {
+            content: "this is content"
+          };
+        },
+        template: "<tr><td>{{content}}</td></tr>"
+      });
+      // 点击子组件两个值求和
+      Vue.component("counter", {
+        template: "<div @click='handleClick2'>{{number}}</div>",
+        data: function() {
+          return {
+            number: 0
+          };
+        },
+        methods: {
+          handleClick2: function() {
+            this.number++;
+            this.$emit("change");
+          }
+        }
+      });
+      var vm = new Vue({
+        el: "#root",
+        data: {
+          total: 0
+        },
+        methods: {
+          handleClick: function() {
+            console.log(this.$refs.hello.innerHTML);
+          },
+          handleChange: function() {
+            this.total = this.$refs.one.number + this.$refs.two.number;
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
