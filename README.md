@@ -28,7 +28,7 @@
   - 子组件向父组件传值：通过\$emit 向上一层触发事件 => 父组件监听
 
 - 4.模板占位符
-  - <template v-for="..."><div>{{xxx}}</div><span>{{xxx}}</span></template>
+  - `<template v-for="..."><div>{{xxx}}</div><span>{{xxx}}</span></template>`
   - 可以用来包裹元素，渲染时，并不会占位
 
 ## 二.Vue 基础
