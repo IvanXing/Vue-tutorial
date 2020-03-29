@@ -226,10 +226,34 @@
 
 ### 4.给组件绑定原生事件
 
-### 5.给父子组件间的传值
+- `@click.native` 监听的是一个原生事件，而不是自定义事件
+
+> `11.html`
+
+### 5.非父子组件间的传值
+
+- Vuex
+- 发布订阅模式（总线机制、BUS、观察者模式）
+
+  ```js
+  Vue.prototype.bus = new Vue();
+  this.bus.$emit("change", this.selfContent);
+  this.bus.$on("change", function(msg) {
+    this_.selfContent = msg;
+  });
+  ```
+
+  > `12.html`
 
 ### 6.在 Vue 中使用插槽
 
-### 7.作用域插槽
+- slot 可以非常方便的向子组件传递 DOM
+- 具名插槽: 给插槽起名字，传递多个插槽
+- 作用域插槽
 
-### 8.动态组件与 v-once 指令
+> `13.html`
+
+### 7.动态组件与 v-once 指令
+
+- 动态组件：根据 is 值的变化，自动加载不同的组件
+- v-once 只渲染一次

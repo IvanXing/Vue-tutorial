@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>插槽</title>
+    <script src="./vue.js"></script>
+  </head>
+  <body>
+    <div id="root">
+      <div>------------01使用v-html------------------</div>
+      <child content="<p>Dell</p>"></child>
+      <div>-------------02使用slot-----------------</div>
+      <child2>
+        <h1>Kobe</h1>
+      </child2>
+      <div>-------------03具名插槽-----------------</div>
+      <body-content>
+        <div class="header" slot="header">头部</div>
+        <div class="footer" slot="footer">底部</div>
+      </body-content>
+      <div>-------------04作用域插槽-----------------</div>
+      <!-- 父组件调用子组件传递一个作用域插槽，必须template开头结尾 -->
+      <!-- 声明接受的数据放在哪里，props里 -->
+      <!-- 告诉子组件以h1组件展示 -->
+      <body-content2>
+        <template slot-scope="props">
+          <h1>{{props.item}}</h1>
+        </template>
+      </body-content2>
+    </div>
+    <script>
+      // 使用v-html这样p标签外还会包裹一个div标签
+      // 模板占位符template不生效
+      // DOM太多时候 不易阅读
+      Vue.component("child", {
+        props: ["content"],
+        template: `<div>
+                    <p>hello</p>
+                    <div v-html="this.content"></div>
+                  </div>`
+      });
+      // slot
+      Vue.component("child2", {
+        template: `<div>
+                    <p>hello2</p>
+                    <slot>默认内容，不传时显示</slot>
+                  </div>`
+      });
+      // 具名插槽
+      Vue.component("body-content", {
+        template: `<div>
+                    <slot name="header">默认头部</slot>
+                    <div class="content">这里是内容</div>
+                    <slot name="footer">默认底部</slot>
+                  </div>`
+      });
+      // 作用域插槽
+      Vue.component("body-content2", {
+        data: function() {
+          return {
+            list: [1, 2, 3, 4]
+          };
+        },
+        template: `<div>
+                    <ul>
+                      <slot v-for="item of list" :item=item></slot>
+                    </ul>
+                  </div>`
+      });
+      var vm = new Vue({
+        el: "#root"
+      });
+    </script>
+  </body>
+</html>

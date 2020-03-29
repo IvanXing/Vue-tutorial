@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title></title>
+    <script src="./vue.js"></script>
+  </head>
+  <body>
+    <div id="root">
+      <child content="Kris"></child>
+      <child content="Paul"></child>
+    </div>
+    <script>
+      // bus是一个Vue实例
+      Vue.prototype.bus = new Vue();
+      Vue.component("child", {
+        props: {
+          content: String
+        },
+        // 单向数据流，不要修改数据，定义数据进行拷贝
+        data: function() {
+          return {
+            selfContent: this.content
+          };
+        },
+        template: "<div @click='handleClick'>{{selfContent}}</div>",
+        methods: {
+          handleClick: function() {
+            // bus是一个Vue实例，有$emit方法，触发一个change事件，携带content参数
+            this.bus.$emit("change", this.selfContent);
+          }
+        },
+        mounted: function() {
+          var this_ = this;
+          this.bus.$on("change", function(msg) {
+            this_.selfContent = msg;
+          });
+        }
+      });
+      var vm = new Vue({
+        el: "#root"
+      });
+    </script>
+  </body>
+</html>
