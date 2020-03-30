@@ -259,3 +259,21 @@
 - v-once 只渲染一次
 
 > `14.html`
+
+## 四.Vue 中的动画
+
+```js
+<transition name="fade">   // 不写name v-enter
+  <div>hello</div>
+</transition>
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 1s;
+}
+
+<transition-group></transition-group>
+```
