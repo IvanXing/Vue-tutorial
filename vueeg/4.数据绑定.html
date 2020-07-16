@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<body>
+  <div id="app">
+    {{msg}}
+  </div>
+  <script src="./node_modules/vue/dist/vue.js"></script>
+  <script>
+    let vm = new Vue({
+      el: '#app', // 绑定时需要给一个普通的DOM元素
+      data: {  // ejs => with
+        msg: 'hello',
+      }
+    });
+    console.log(vm);
+    // vue2 实现数据响应式变化用 Object.defineProperty 缺点是不支持数组
+    // vue3 用 proxy
+    vm.msg = 'change';
+  </script>
+</body>
+</html>
