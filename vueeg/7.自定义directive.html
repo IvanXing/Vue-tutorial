@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <body>
+    <style>
+      .content {
+        width: 100px;
+        height: 100px;
+        background: red;
+      }
+    </style>
+    <!-- 指令的作用 就是操作dom  有特定功能 -->
+    <div id="app">
+
+      <div v-color="'red'">xxxx</div>
+
+      <!-- <div>
+        <input type="text" @focus="show" @blur="hide">
+        <div class="content" v-if="isShow">content <button>点我</button></div>
+      </div> -->
+
+    <!-- 点击外边隐藏 -->
+      <div v-click-outside="hide">
+        <input type="text" @focus="show" />
+        <div class="content" v-if="isShow">content <button>点我啊</button></div>
+      </div>
+
+      <input type="text" v-focus="xx" />
+
+    </div>
+    <script src="./node_modules/vue/dist/vue.js"></script>
+    <script>
+
+      // 全局指令 不需要每个组件都引用 只需要全局引用下即可
+      // el 当前元素  
+      // bingdings.value 指令里赋值的字符串
+      // vnode 虚拟节点，用对象描述 当前上下文信息
+      Vue.directive("color", function (el, bingdings, vnode) {
+        // context
+        console.log('🐂🐂🐂==>', el, bingdings, vnode);
+        el.style.border = `1px solid  ${bingdings.value}`;
+      });
+
+
+      // 图片懒加载  v-scroll 等
+      let vm = new Vue({
+        el: "#app",
+
+        // 局部指令
+        directives: {
+          focus: {     // 指令的生命周期  // 默认调用的方法是bind和update
+            bind(el) {
+              console.log("el绑定到页面上执行", el);
+            },
+            inserted(el) {  // 这个元素插入到了页面中 执行的钩子
+              el.focus();
+            },
+            // 所有的数据发生变化 都会重新执行
+            update(el) { // 依赖的数据发生变化 也会触发此方法
+              console.log(el);
+            },
+          },
+          "click-outside"(el, bingdings, vnode) {
+            //  绑定给dcouemnt  捕获到事件发生在谁的身上
+            document.addEventListener("click", (e) => {
+              // 如果当前元素内的不管的 点击外面就隐藏content标签
+              if (!el.contains(e.target)) {
+                vnode.context[bingdings.expression]();   // 上下文vm 表达式hide
+              }
+            });
+          },
+        },
+
+        data: {
+          isShow: false,
+          xx: "hello",
+        },
+
+        methods: {
+          show() {
+            this.isShow = true;
+          },
+          hide() {
+            this.isShow = false;
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
