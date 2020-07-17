@@ -1,25 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Document</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
 </head>
 <body>
-  <div id="app">
-    {{msg}}
-  </div>
-  <script src="./node_modules/vue/dist/vue.js"></script>
-  <script>
-    let vm = new Vue({
-      el: '#app', // 绑定时需要给一个普通的DOM元素
-      data: {  // ejs => with
-        msg: 'hello',
-      }
-    });
-    console.log(vm);
-    // vue2 实现数据响应式变化用 Object.defineProperty 缺点是不支持数组
-    // vue3 用 proxy
-    vm.msg = 'change';
-  </script>
+    <!-- mustache 可以做运算 取值 输出 三元 不能写js语法（var x = 100）-->
+    <!-- info.a，不存在，但是不会报错，控制台修改vm.info.a = 100不会生效，定义info中没有a，数据没有被劫持 -->
+    <!-- 只要使用vue的数据就需要先声明 再使用 -->
+    <div id="app">
+        {{msg}} {{1+1}} {{info.a}} {{ {} }}
+        {{flag?1:2}}  {{ (function(){return 100})() }}
+        {{msg+'123'}}
+    </div> 
+    <script src="./node_modules/vue/dist/vue.js"></script>
+    <script>
+        let vm = new Vue({
+            data:{
+                info:{},
+                msg:'hello',
+                flag:true
+            }
+        });
+        vm.$mount('#app')
+        
+
+        // 1.vm.$el 指代的就是当前的根元素
+        // 2.vm.$nextTick 延迟执行 dom操作时必备，DOM更新完执行
+        // 3.vm.$watch 监控数据变化
+        // 4.vm.$data 当前数据对象
+        // 5.vm.$options所有的选项
+        // 6.vm.$set
+        // 7.vm.$mount挂载  单元测试 在内存中挂载vue实例 此时只能用$mount属性
+
+
+        // DOM更新后触发一次，不随着render触发
+        // 可以观察某个数据 发生变化后触发此函数
+        // 先监控，后变化
+        vm.$watch('msg',function (newVale,oldValue) { 
+            console.log(newVale,oldValue)
+        });
+    
+
+        // 渲染同步，dom更新是异步的
+        vm.msg = 'zf';
+        vm.msg = 'xxx'; 
+        console.log(vm.$el.innerHTML); // render及时生效但是dom没有更新，会先放缓冲区，异步更新DOM
+        vm.$nextTick(function () {   // DOM更新完执行
+            console.log(vm.$el.innerHTML);
+        });
+
+
+    
+    </script>
 </body>
 </html>
