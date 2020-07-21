@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">{{a}}</div>
+    <script src="./node_modules/vue/dist/vue.js"></script>
+    <script>
+        let vm = new Vue({
+            el:'#app',
+            data:{
+                a:'hello'
+            },
+
+            // 钩子函数 在new新建Vue的时候 会最先调用
+            // 这个钩子，一般不会做太多功能，底层中可以做一些链，给实例加属性
+            // 会初始化自己的生命周期，初始化事件方法 $on $emit，自带函数
+            beforeCreate(){ 
+               console.log(this); // Vue
+            },
+
+            // 响应式的数据变化观察，加get和set
+            // 此时dom还未挂载到页面，无法获取真实dom元素的，拿不到 this.$el
+            created(){ 
+                console.log(this.$el); // undefined
+            },
+
+
+            // template:`<div>hello123</div>`, // 内部模板，vue-cli 
+
+            // render(createElement){ // 像react,虚拟dom 就是一个对象
+            //     return createElement('div',{
+            //         attrs:{  // 属性
+            //             id:1
+            //         },
+            //         on:{   // 事件
+            //             click(){
+            //                 alert(1)
+            //             }
+            //         }
+            //     },'hello');
+            // },
+
+
+
+            // 挂载之前
+            // 这个方法基本用不到,检测有没有template属性（el:#app）,有的话会把这个template 渲染成一个render函数，没的话不触发
+            // 如果写一个 template:`<div>hello123</div>`, 就会渲染内部模板template，次选el:'#app'外部模板
+            beforeMount(){ 
+                console.log('beforeMount')
+            },
+
+
+            // 挂载后
+            // 和created()唯一的区别 这个里面可以获取真实的元素 this.$el
+            // 拿到数据操作DOM 请求放这里
+            mounted(){ 
+                this.a = 'world'; // 立即修改需加$nextTick回调，保证DOM更新后
+                this.$nextTick(()=>{ // promise.then,setImmediate,MutationObserver,setTiemout，异步延迟
+                   alert(this.$el.innerHTML); // 只要操作dom 就增加$nextTick
+                })
+            },
+
+            // 在更新的之前再做一次修改
+            beforeUpdate(){ 
+                this.a = 100;
+            },
+
+            // 更新后
+            // 不能在修改值了,这个钩子不要更改数据，数据一变用watch
+            updated(){ 
+                console.log('更新后')
+                // this.a = 500;  // 一直执行‘更新后’
+            },
+
+
+            // 一般情况下 用来清除定时器 移除绑定的方法事件
+            beforeDestroy(){
+                console.log('销毁前'); 
+            },
+
+            destroyed(){
+                console.log('销毁后')
+            }
+        });
+
+        // 触发销毁，一般当组件销毁的时候回触发，路由切换的时候页面销毁，手动销毁
+        // vm.$destroy(); // activeted ...
+
+    </script>
+</body>
+</html>
