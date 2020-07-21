@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="app">
+
+      <!-- 01. 修改vm.xx没有必要重新触发getName()的变化 -->
+      <!-- {{getName()}} {{xx}} -->
+
+      <!-- 02.计算属性computed基于Object.defineProperty是属性不是方法 -->
+      <!-- {{getName}} {{xx}} -->
+
+      {{fullName}}
+
+    </div>
+    <script src="./node_modules/vue/dist/vue.js"></script>
+    <script>
+
+        let vm = new Vue({
+          el:'#app',
+          data:{
+              xx: 'xx',
+              firstName:'特',
+              lastName:'别',
+              fullName:''
+          },
+
+          // 视图更新都是异步的，触发一次watch
+
+          // computed有缓存 methods没有缓存
+          // methods:{
+          //     getName(){
+          //         console.log('123')
+          //         return this.firstName + this.lastName
+          //     }
+          // },
+
+
+
+          // compouted 他是基于 Object.defineProperty  getter / setter
+          // vuex 我们希望通过vuex来实现双向绑定，改计算属性，同步到vuex，
+          // （全选，多选）  input checkbox   checkbox checbox, 每项都选了计算得出全选
+          // computed会有缓存 如果依赖的数据不发生变化 不会重新执行方法 
+          // computed:{ 
+          //     getName:{
+          //         get(){
+          //             return this.firstName + this.lastName
+          //         },
+          //         set(val){     // 通过vm.getName = 'yyy' 可以触发set
+          //             this.xx = val
+          //         }
+          //     }
+          // },
+
+
+
+
+
+
+          // 什么时候用watch 什么时候 用computed  
+          // watch支持获取值异步，computed获取值只支持同步
+          // 简单的事件 数据变化就发送调用接口 watch
+          // 只是计算一个值的结果 就用computed
+          watch:{ 
+              //写成对象的目的 为了可以传递参数 immediate deep {a:{a"1}}
+              firstName:{ 
+                  handler(newVal,oldValue){
+                      setTimeout(() => {
+                          this.fullName = this.firstName + this.lastName
+                      }, 1000);
+                  },
+                  immediate:true,
+                  deep:true // 只要属性发生变化 就会触发此函数 默认只监控一层
+              },
+              lastName:{
+                  handler(newVal,oldValue){
+                      this.fullName = this.firstName + this.lastName
+                  },
+                  immediate:true
+              },
+          },
+
+
+
+          // vm.$watch 默认直接调用 handler，但是不会立即执行，变化了才执行
+          // watch: {
+          //   firstName(newVal, oldValue) {
+          //     console.log('f-move', newVal, oldValue)
+          //     this.fullName = this.firstName + this.lastName
+          //   },
+          //   lastName(newVal, oldValue) {
+          //     console.log('l-move', newVal, oldValue)
+          //     this.fullName = this.firstName + this.lastName
+          //   },
+          // }
+         
+
+
+      })
+    </script>
+  </body>
+</html>
