@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="app">
+
+			<!-- .native 修饰符 相当于给组件的模板最外成添加事件 给 <div><button>{{msg}}</button></div> 整个横行添加-->
+			<!-- <my-button @click.native="show"></my-button> -->
+
+			<!-- 通过this.$attrs和this.$listeners 传递属性以及方法 -->
+			<!-- <my-button @click="show" @mouseup="show" a="2"></my-button> -->
+
+      <!-- my-button  this.$on('click',show) 给this也就是my-button绑定click事件 show-->
+      <my-button @click="show" @mouseup="show"></my-button>
+    </div>
+    <script src="./node_modules/vue/dist/vue.js"></script>
+
+    <script>
+      Vue.component("my-button", {
+        data() {
+          return { msg: "点我啊" };
+				},
+				// this.$attrs (v-bind) this.$listeners (v-on)
+				mounted(){
+					console.log('传递属性', this.$attrs)
+					console.log('传递方法', this.$listeners)
+				}, 
+				
+				// template: `<div><button>{{msg}}</button></div>`,
+
+				// 一个个传递方法
+				// template:`<div><button @click="$listeners.click()"  @mouseup="$listeners.mouseup">{{msg}}</button></div>`,
+
+				// 把事件整体传入
+				// template:`<div><button v-on="$listeners">{{msg}}</button></div>`, 
+				
+        // 子组件通过 $emit 触发自己（父组件，调用方）身上的click事件
+        template: `<div><button @click="$emit('click')" @mouseup="$emit('mouseup')">点我啊</button></div>`,
+      });
+      let vm = new Vue({
+        el: "#app",
+        methods: {
+          show() {
+            alert(1);
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
