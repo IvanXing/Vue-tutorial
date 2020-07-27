@@ -4,6 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "@vue/cli": "^4.4.6",
+    "@vue/cli-service-global": "^4.4.6",
     "vue": "^2.6.11"
   }
 }
