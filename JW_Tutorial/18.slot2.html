@@ -7,20 +7,20 @@
     <title>Document</title>
 </head>
 <body>
-    <!-- 在html中不能给标签大写  属性名字必须用 - 这种方式转驼峰-->
+    <!-- 在html中不能给标签大写  属性名字必须用 - 这种方式转驼峰 my-list myList-->
         <div id="app">
-           <list :arr="arr" v-slot:default="{v}"  >
-               <!-- slot slot-scope = v-slot -->
-              <div>{{vv}}</div>
+           <list :arr="arr" v-slot:default="{v, q}"  >
+               <!-- slot slot-scope = v-slot  v-slot="xxx"-->
+              <div>{{v}}--{{q}}--{{vv}}</div>
            </list>
         </div>
         <script src="./node_modules/vue/dist/vue.js"></script>
         <script>
             Vue.component('list',{
                 props:['arr'],
-                // 通过作用域插槽的方式 函数组件
+                // 1.通过作用域插槽的方式  2.函数组件
                 template:`<ul> 
-                    <slot v-for="i in arr" :v="i" :q=1></slot>    
+                    <slot v-for="i in arr" :v="i" :q=100 ></slot>    
                 </ul>`
             })
             let vm = new Vue({ 
