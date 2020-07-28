@@ -40,16 +40,16 @@
         // 可以观察某个数据 发生变化后触发此函数
         // 先监控，后变化
         vm.$watch('msg',function (newVale,oldValue) { 
-            console.log(newVale,oldValue)
+            console.log('$watch监控=>', newVale,oldValue)
         });
     
 
         // 渲染同步，dom更新是异步的
         vm.msg = 'zf';
         vm.msg = 'xxx'; 
-        console.log(vm.$el.innerHTML); // render及时生效但是dom没有更新，会先放缓冲区，异步更新DOM
+        console.log('同步$el=>', vm.$el.innerHTML); // render及时生效但是dom没有更新，会先放缓冲区，异步更新DOM
         vm.$nextTick(function () {   // DOM更新完执行
-            console.log(vm.$el.innerHTML);
+            console.log('异步$el=>', vm.$el.innerHTML);
         });
 
 
